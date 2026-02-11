@@ -17,18 +17,21 @@
     align-items:center;
     flex-direction:column;
   }
+
   h1 {
     color:black;
     text-align:center;
     z-index:1;
     position:relative;
-    line-height:1.5; /* spacing between the two lines */
+    line-height:1.5;
   }
+
   #buttons {
     margin-top:20px;
     position:relative;
     z-index:1;
   }
+
   button {
     padding:20px 40px;
     margin:0 10px;
@@ -41,26 +44,29 @@
     transition:all 0.2s ease;
     position:relative;
   }
+
   canvas {
     position:absolute;
     top:0;
     left:0;
     pointer-events:none;
   }
+
   #from {
     position:absolute;
     bottom:10px;
-    right:300px;
+    right:50px;
     color:blue;
     font-weight:bold;
     z-index:1;
   }
+
   #message {
     margin-top:15px;
     color:blue;
     font-weight:bold;
-    font-size:40px;
-    min-height:24px;
+    font-size:30px;
+    min-height:30px;
     text-align:center;
     z-index:1;
     position:relative;
@@ -69,7 +75,12 @@
 </head>
 <body>
 
+<h1>Hi, Ashley sungit 😏<br>Can I take you out on Valentine's?</h1>
 
+<div id="buttons">
+  <button id="yes">Yes ❤️</button>
+  <button id="no">No 💔</button>
+</div>
 
 <div id="message"></div>
 <canvas id="hearts"></canvas>
@@ -92,7 +103,7 @@ const heartPoints = [];
 for(let t=0; t<Math.PI*2; t+=0.05){
   const x = 16*Math.pow(Math.sin(t),3);
   const y = -(13*Math.cos(t) - 5*Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t));
-  heartPoints.push({x: x*15, y: y*15}); // scale
+  heartPoints.push({x: x*10, y: y*10}); // scale down
 }
 
 // Heart particle
@@ -104,14 +115,14 @@ function createHeartParticle() {
     targetX: canvas.width/2 + point.x,
     targetY: canvas.height/2 + point.y,
     size: Math.random()*6+3,
-    color: Math.random()<0.5?'red':'pink',
+    color: ['red','green','blue'][Math.floor(Math.random()*3)],
     alpha:0
   });
 }
 
 // Draw a small heart
 function drawHeart(x,y,size,color,alpha){
-  ctx.fillStyle=`rgba(${color==='red'?'255,0,0':'255,105,180'},${alpha})`;
+  ctx.fillStyle=`rgba(${color==='red'?'255,0,0':color==='green'?'0,255,0':'0,0,255'},${alpha})`;
   ctx.beginPath();
   ctx.moveTo(x,y);
   ctx.bezierCurveTo(x,y-size/2,x-size,y-size/2,x-size,y);
@@ -129,10 +140,10 @@ function animate(){
   for(let i=hearts.length-1;i>=0;i--){
     const h = hearts[i];
     h.alpha += 0.02;
-    // Move gradually to target
     h.x += (h.targetX - h.x)*0.05;
     h.y += (h.targetY - h.y)*0.05;
     drawHeart(h.x,h.y,h.size,h.color,h.alpha);
+    if(h.alpha>1) hearts.splice(i,1);
   }
 
   requestAnimationFrame(animate);
@@ -142,11 +153,7 @@ animate();
 
 // Button events
 yesButton.addEventListener("click",()=>{
-  messageDiv.textContent="'Yes pumayag din, loveyouuu!💖";
-});
-
-noButton.addEventListener("click",()=>{
-  messageDiv.textContent="Bawal tumanggi! ";
+  messageDiv.textContent="Yes pumayag din, loveyouuu! 💖";
 });
 
 noButton.addEventListener("mouseenter",()=>{
@@ -155,7 +162,7 @@ noButton.addEventListener("mouseenter",()=>{
   noButton.style.position="absolute";
   noButton.style.left=x+"px";
   noButton.style.top=y+"px";
-  messageDiv.textContent="Bawal tumanggi! ";
+  messageDiv.textContent="Bawal tumanggi! 😅";
 });
 
 // Resize
